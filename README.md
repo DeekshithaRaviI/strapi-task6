@@ -196,3 +196,16 @@ Access Strapi Admin in Docker
 
 Open in browser:
 http://localhost:1337/admin
+## Task 3 - Dockerized Strapi with PostgreSQL and Nginx
+
+- Created a user-defined Docker network: `strapi-net`.
+- Set up a PostgreSQL container with:
+  - User: `strapi`
+  - Password: `strapi123`
+  - Database: `strapidb`
+- Configured Strapi container to connect with PostgreSQL using environment variables.
+- Set up an Nginx container as a reverse proxy:
+  - Host port 80 → Nginx
+  - Proxies requests to Strapi (port 1337)
+- Verified Strapi Admin Dashboard is accessible at: [http://localhost/admin](http://localhost/admin)
+- Documented all setup steps and commands.
