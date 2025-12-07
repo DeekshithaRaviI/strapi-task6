@@ -168,3 +168,31 @@ See for yourself what's under the hood by getting access to a [hosted Strapi pro
 
 See the [LICENSE](./LICENSE) file for licensing information.
 0d1cc7555f39454c1c2c97444573140074c4bd4e
+
+## Task-2: Dockerized Strapi Setup with PostgreSQL
+
+### 1. Dockerfile Overview
+The Dockerfile does the following:
+- Uses Node.js base image
+- Sets working directory inside container
+- Copies `package.json` and installs dependencies
+- Copies the rest of the project files
+- Exposes port `1337`
+- Runs `npm start` to launch Strapi
+
+### 2. Install PostgreSQL Driver
+```bash
+npm install pg
+docker build -t strapi-app .
+docker run -p 1337:1337 ^
+ -e DATABASE_CLIENT=postgres ^
+ -e DATABASE_NAME=strapidb ^
+ -e DATABASE_HOST=host.docker.internal ^
+ -e DATABASE_PORT=5432 ^
+ -e DATABASE_USERNAME=strapi ^
+ -e DATABASE_PASSWORD=strapi123 ^
+ strapi-app
+Access Strapi Admin in Docker
+
+Open in browser:
+http://localhost:1337/admin
