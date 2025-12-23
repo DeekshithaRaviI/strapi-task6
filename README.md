@@ -181,7 +181,6 @@ The Dockerfile does the following:
 - Runs `npm start` to launch Strapi
 
 ### 2. Install PostgreSQL Driver
-```bash
 npm install pg
 docker build -t strapi-app .
 docker run -p 1337:1337 ^
@@ -196,7 +195,8 @@ Access Strapi Admin in Docker
 
 Open in browser:
 http://localhost:1337/admin
-## Task 3 - Dockerized Strapi with PostgreSQL and Nginx
+
+##  Task 3 - Dockerized Strapi with PostgreSQL and Nginx
 
 - Created a user-defined Docker network: `strapi-net`.
 - Set up a PostgreSQL container with:
@@ -209,3 +209,54 @@ http://localhost:1337/admin
   - Proxies requests to Strapi (port 1337)
 - Verified Strapi Admin Dashboard is accessible at: [http://localhost/admin](http://localhost/admin)
 - Documented all setup steps and commands.
+## Task 4: Docker Deep-Dive Documentation
+
+Objective: Gain a thorough understanding of Docker, its architecture, and its practical usage.
+Topics Covered:
+Problem Docker Solves:
+Docker provides lightweight, portable containers that solve environment inconsistency issues, unlike traditional deployment setups.
+Virtual Machines vs Docker:
+VMs include the full OS, making them heavier. Docker uses containers sharing the host OS, making it faster and more resource-efficient.
+Docker Architecture:
+Installed components include Docker Engine, Docker CLI, container runtime, and storage/volume management.
+Understanding how containers interact with host OS and networks.
+Dockerfile Deep Dive:
+Explained each line of a Dockerfile, including base image, working directory, copying files, installing dependencies, exposing ports, and defining commands to run.
+Key Docker Commands:
+Built, ran, stopped, removed containers; inspected logs; managed images.
+Docker Networking:
+Configured custom bridge networks for inter-container communication.
+Volumes & Persistence:
+Used Docker volumes to persist database and application data outside the container.
+Docker Compose:
+Used Compose to define multi-container applications, networks, and environment variables in a single YAML file.
+Outcome: Gained hands-on experience in container orchestration, multi-container networking, and persistent storage management with Docker.
+
+## Task 5: Deploy Strapi on EC2 using Terraform and Docker
+Objective
+To deploy a Dockerized Strapi application on an AWS EC2 instance using Terraform, ensuring the entire process is fully automated.
+
+**Implementation Details**
+Created a Dockerfile to containerize the Strapi application.
+Built the Docker image locally and pushed it to a container registry (AWS ECR / Docker Hub).
+Used Terraform to automate infrastructure provisioning:
+Launched an EC2 instance.
+Configured security groups to allow required ports (SSH, HTTP).
+Used user data (cloud-init) to:
+Install Docker on the EC2 instance.
+Authenticate with the container registry.
+Pull the Strapi Docker image.
+Run the Strapi container automatically.
+Ensured no manual SSH steps were required after provisioning.
+
+**Tools & Technologies**
+
+AWS EC2
+Terraform
+Docker
+AWS ECR / Docker Hub
+Linux (User Data / Shell scripting)
+Outcome
+Successfully deployed Strapi as a Docker container on EC2.
+Achieved Infrastructure as Code (IaC) with full automation using Terraform.
+Application runs automatically after EC2 launch without manual intervention.
