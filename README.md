@@ -177,7 +177,6 @@ This task involves cloning the Strapi repository, running it locally, exploring 
 
 ### 1. Clone the Strapi Repository
 Cloned the official Strapi repository from GitHub:
-```bash
 git clone https://github.com/strapi/strapi.git
 cd strapi
 
