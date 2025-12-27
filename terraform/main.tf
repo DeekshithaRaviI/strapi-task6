@@ -14,85 +14,21 @@ provider "aws" {
 }
 
 # ------------------------------- 
-# Security Group (CREATE NEW)
+# Existing Security Group (CREATED IN PREVIOUS RUN)
 # ------------------------------- 
-resource "aws_security_group" "strapi_sg" {
-  name        = "deek-strapi-sg"
-  description = "Security group for Strapi server"
-
-  # SSH access
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Strapi access
-  ingress {
-    description = "Strapi"
-    from_port   = 1337
-    to_port     = 1337
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Outbound internet access
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name    = "deek-strapi-sg"
-    Owner   = "Deek"
-    Project = "Strapi-Task6"
-  }
+data "aws_security_group" "existing_sg" {
+  id = "sg-058b992b70f5a5bd1"  # The one that was just created
 }
 
 # ------------------------------- 
-# IAM Role for EC2 (CREATE NEW)
+# Existing IAM Instance Profile
 # ------------------------------- 
-resource "aws_iam_role" "ec2_ecr_role" {
-  name = "deek-ec2-ecr-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      }
-    ]
-  })
-
-  tags = {
-    Name    = "deek-ec2-ecr-role"
-    Owner   = "Deek"
-    Project = "Strapi-Task6"
-  }
-}
-
-# Attach ECR read-only policy
-resource "aws_iam_role_policy_attachment" "ecr_read" {
-  role       = aws_iam_role.ec2_ecr_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-}
-
-# Create instance profile
-resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "deek-ec2-ecr-instance-profile"
-  role = aws_iam_role.ec2_ecr_role.name
+data "aws_iam_instance_profile" "existing_profile" {
+  name = "deek-ec2-ecr-instance-profile"  # Check if this was created
 }
 
 # ------------------------------- 
-# EC2 Instance
+# EC2 Instance ONLY
 # ------------------------------- 
 resource "aws_instance" "strapi_instance" {
   ami                    = var.ami_id
@@ -100,10 +36,10 @@ resource "aws_instance" "strapi_instance" {
   key_name               = var.key_name
   
   vpc_security_group_ids = [
-    aws_security_group.strapi_sg.id
+    data.aws_security_group.existing_sg.id
   ]
   
-  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
+  iam_instance_profile = data.aws_iam_instance_profile.existing_profile.name
   
   user_data = templatefile("${path.module}/user-data.sh", {
     docker_image = var.docker_image
