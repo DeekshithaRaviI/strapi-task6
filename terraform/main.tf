@@ -89,12 +89,6 @@ resource "aws_iam_role_policy_attachment" "ecr_read" {
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "deek-ec2-ecr-instance-profile"
   role = aws_iam_role.ec2_ecr_role.name
-
-  tags = {
-    Name    = "deek-ec2-ecr-instance-profile"
-    Owner   = "Deek"
-    Project = "Strapi-Task6"
-  }
 }
 
 # ------------------------------- 
