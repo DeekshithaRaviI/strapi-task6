@@ -17,7 +17,7 @@ provider "aws" {
 # Existing Security Group (CREATED IN PREVIOUS RUN)
 # ------------------------------- 
 data "aws_security_group" "existing_sg" {
-  id = "sg-058b992b70f5a5bd1"  # The one that was just created
+  id = "sg-0bb1451aa6444572b"  # The one that was just created
 }
 
 # ------------------------------- 
