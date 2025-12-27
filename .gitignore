@@ -1,14 +1,15 @@
 # Terraform
-.terraform/
+**/.terraform/*
 *.tfstate
-*.tfstate.backup
-*.tfplan
-terraform.tfvars
+*.tfstate.*
+tfplan
+
+# Terraform lock (optional)
+.terraform.lock.hcl
+
+# AWS keys
+*.csv
+*.pem
 
 # OS
-*.exe
-*.csv
 .DS_Store
-
-# Secrets
-*accessKeys*

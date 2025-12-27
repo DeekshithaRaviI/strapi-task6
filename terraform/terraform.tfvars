@@ -1,0 +1,7 @@
+aws_region     = "us-east-1"
+aws_account_id = "010928202268"
+key_name       = "strapi-new"
+ecr_image_uri  = "010928202268.dkr.ecr.us-east-1.amazonaws.com/strapi:latest"
+db_name        = "strapi"
+db_username    = "strapi"
+db_password    = "Password123"
