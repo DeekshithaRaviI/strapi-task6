@@ -23,14 +23,16 @@ output "ssh_command" {
   value       = "ssh -i ${var.key_name}.pem ubuntu@${aws_instance.strapi_instance.public_ip}"
 }
 
+# Fixed: Reference the existing security group (data source)
 output "security_group_id" {
   description = "Security Group ID"
-  value       = aws_security_group.strapi_sg.id
+  value       = data.aws_security_group.existing_sg.id
 }
 
-output "iam_role_name" {
-  description = "IAM Role Name"
-  value       = aws_iam_role.ec2_ecr_role.name
+# Fixed: Reference the existing IAM instance profile (data source)
+output "iam_instance_profile_name" {
+  description = "IAM Instance Profile Name"
+  value       = data.aws_iam_instance_profile.existing_profile.name
 }
 
 output "resource_tags" {
