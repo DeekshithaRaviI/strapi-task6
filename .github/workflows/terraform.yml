@@ -1,0 +1,100 @@
+name: CD - Terraform Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Terraform Action'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+          - apply
+          - destroy
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+
+jobs:
+  terraform:
+    name: Terraform Deploy
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./terraform
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Get latest image tag
+        id: image
+        run: |
+          LATEST_IMAGE="${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:latest"
+          echo "tag=${LATEST_IMAGE}" >> $GITHUB_OUTPUT
+          echo "Latest image: ${LATEST_IMAGE}"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        if: github.event.inputs.action == 'apply'
+        run: |
+          terraform plan \
+            -var="docker_image=${{ steps.image.outputs.tag }}" \
+            -var="aws_region=${{ secrets.AWS_REGION }}" \
+            -out=tfplan
+
+      - name: Terraform Apply
+        if: github.event.inputs.action == 'apply'
+        run: terraform apply -auto-approve tfplan
+
+      - name: Terraform Destroy
+        if: github.event.inputs.action == 'destroy'
+        run: |
+          terraform destroy \
+            -var="docker_image=${{ steps.image.outputs.tag }}" \
+            -var="aws_region=${{ secrets.AWS_REGION }}" \
+            -auto-approve
+
+      - name: Get Terraform Outputs
+        if: github.event.inputs.action == 'apply'
+        id: terraform-output
+        run: |
+          echo "public_ip=$(terraform output -raw instance_public_ip)" >> $GITHUB_OUTPUT
+          echo "instance_id=$(terraform output -raw instance_id)" >> $GITHUB_OUTPUT
+
+      - name: Deployment Summary
+        if: github.event.inputs.action == 'apply'
+        run: |
+          echo "## Deployment Complete! 🎉" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Instance ID:** \`${{ steps.terraform-output.outputs.instance_id }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Public IP:** \`${{ steps.terraform-output.outputs.public_ip }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Access Your Application:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Strapi Admin:** http://${{ steps.terraform-output.outputs.public_ip }}:1337/admin" >> $GITHUB_STEP_SUMMARY
+          echo "- **SSH Access:** \`ssh -i your-key.pem ubuntu@${{ steps.terraform-output.outputs.public_ip }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⏳ **Note:** Please wait 2-3 minutes for Strapi to fully start." >> $GITHUB_STEP_SUMMARY
