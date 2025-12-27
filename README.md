@@ -168,6 +168,19 @@ See for yourself what's under the hood by getting access to a [hosted Strapi pro
 
 See the [LICENSE](./LICENSE) file for licensing information.
 0d1cc7555f39454c1c2c97444573140074c4bd4e
+# Task 1: Strapi Setup and Content Type Creation
+
+## Overview
+This task involves cloning the Strapi repository, running it locally, exploring the project structure, creating a sample content type, and pushing the setup to GitHub. Additionally, a Loom video was created to demonstrate the process.
+
+## Steps Performed
+
+### 1. Clone the Strapi Repository
+Cloned the official Strapi repository from GitHub:
+```bash
+git clone https://github.com/strapi/strapi.git
+cd strapi
+
 
 ## Task-2: Dockerized Strapi Setup with PostgreSQL
 
@@ -309,6 +322,25 @@ Successfully deployed Strapi as a Docker container on EC2.
 Achieved Infrastructure as Code (IaC) with full automation using Terraform.
 
 Application runs automatically after EC2 launch without manual intervention.
+
+
+# Task 6 – Strapi Deployment using Terraform & GitHub Actions
+
+## Description
+Automated Strapi deployment on AWS using Terraform, Docker, ECR, and GitHub Actions.
+
+## Components
+- EC2 with Security Group
+- IAM Role + Instance Profile
+- Dockerized Strapi
+- CI/CD via GitHub Actions
+
+## How to Run
+1. Trigger GitHub Actions workflow
+2. Terraform provisions EC2
+3. Access Strapi via EC2 Public IP
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/516a1b28-9de3-4fb9-aed6-960336ddd13d" />
 
 
 
