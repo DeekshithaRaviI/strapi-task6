@@ -19,7 +19,7 @@ variable "instance_type" {
 variable "key_name" {
   description = "SSH key pair name"
   type        = string
-  default     = "deek-key" # Update this to your actual key name
+  default     = "dee-key" # Update this to your actual key name
 }
 
 variable "docker_image" {
