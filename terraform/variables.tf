@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "ami_id" {
   description = "AMI ID for Ubuntu 22.04"
   type        = string
-  default     = "ami-0e2c8caa4b6378d8c" # Ubuntu 22.04 LTS in us-east-1
+  default     = "ami-0ff91eb5c6fe7cc86" # Ubuntu 22.04 LTS in ap-south-1
 }
 
 variable "instance_type" {
